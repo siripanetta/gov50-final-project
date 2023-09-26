@@ -1,7 +1,7 @@
 ---
 title: "Gov 50 Final Project"
-author: "Your Name Here"
-description: "My final project"
+author: "Siri Panetta"
+description: "My Final Project"
 output:
   distill::distill_article:
     self_contained: false
@@ -9,6 +9,6 @@ output:
 
 
 
-## Project thoughts
+## Project Thoughts
 
-I am interested in exploring data related to...
+I am interested in exploring data related to the sleep of Harvard freshmen. Many first-year students have not mastered their study patterns, so I am interested in how much sleep they get, when they go to bed, when they wake up, what their intended concentration is, what their gender is, how many clubs they are part of, what dorm they are in, and other identifying information. I would plan to collect this data msyelf through some means (personal surveys or possibly through social media). If this does not work, I am also interested in where Harvard freshmen study and how that possibly relates to their intended concentration, dorm, gender, etc..

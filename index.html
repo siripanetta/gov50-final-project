@@ -115,7 +115,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/header-attrs-2.17/header-attrs.js","index_files/header-attrs-2.24/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
+  {"type":"character","attributes":{},"value":["foxnews.csv","index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/figure-html5/unnamed-chunk-1-1.png","index_files/header-attrs-2.17/header-attrs.js","index_files/header-attrs-2.24/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
   <!--/radix_placeholder_navigation_in_header-->
@@ -1517,11 +1517,46 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </div>
 
 <div class="d-article">
+<p>Milestone 3:</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span></span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>gov50data</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>foxnews</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://readr.tidyverse.org/reference/read_delim.html'>read_csv</a></span><span class='op'>(</span><span class='st'>"/Users/siripanetta/gov50-problem-set0/gov50-final-project/foxnews.csv"</span><span class='op'>)</span></span>
+<span><span class='va'>foxnews</span></span></code></pre>
+</div>
+<pre><code># A tibble: 10,126 × 12
+   state town       college1990 male1990 black1990 hisp1990 income1990
+   &lt;chr&gt; &lt;chr&gt;            &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;      &lt;dbl&gt;
+ 1 Ak    Angoon          0.164     0.549   0        0.0171        3.21
+ 2 Ak    Barrow          0.183     0.527   0.00656  0.0211        5.67
+ 3 Ak    Bethel          0.219     0.522   0.00779  0.0170        4.22
+ 4 Ak    Cordova         0.175     0.544   0.00138  0.0313        4.63
+ 5 Ak    Craig           0.165     0.535   0        0.0309        4.72
+ 6 Ak    Dillingham      0.213     0.503   0        0.0118        4.41
+ 7 Ak    Eielson         0.145     0.555   0.116    0.0544        2.59
+ 8 Ak    Fairbanks       0.183     0.540   0.126    0.0484        3.20
+ 9 Ak    Galena          0.151     0.681   0.0371   0.00248       2.86
+10 Ak    Gambell         0.0383    0.575   0        0             1.59
+# ℹ 10,116 more rows
+# ℹ 5 more variables: logincome1990 &lt;dbl&gt;, subrf2000 &lt;dbl&gt;,
+#   gopvoteshare1992 &lt;dbl&gt;, gopvoteshare1996 &lt;dbl&gt;,
+#   gopvoteshare2000 &lt;dbl&gt;</code></pre>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>incomevoteplot</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>foxnews</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>income1990</span>, y <span class='op'>=</span> <span class='va'>gopvoteshare1992</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span>color <span class='op'>=</span> <span class='st'>"steelblue1"</span>, alpha <span class='op'>=</span> <span class='fl'>0.5</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Median Income in 1990"</span>, y <span class='op'>=</span> <span class='st'>"Republican Vote Share"</span>, title <span class='op'>=</span> <span class='st'>"Income vs. GOP Support in American Towns"</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span>method <span class='op'>=</span> <span class='st'>"lm"</span>, se <span class='op'>=</span> <span class='cn'>FALSE</span>, color <span class='op'>=</span> <span class='st'>"indianred1"</span>, size <span class='op'>=</span> <span class='fl'>1.5</span><span class='op'>)</span></span>
+<span><span class='va'>incomevoteplot</span></span></code></pre>
+</div>
+<img src="index_files/figure-html5/unnamed-chunk-1-1.png" width="624" />
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>##eventually add echo = FALSE to code chunk</span></span></code></pre>
+</div>
+</div>
 <p>Milestone 2:
 How does median income affect a town’s political views? I hypothesize that the more wealthy areas will be more conservative. People with more money are more likely to support tax cuts for the wealthy and less social programs, which are in-line with Republican party views. People with less money are more likely to want more funding allocated to social programs and more taxes on the wealthy, which is more in-line with Democratic party views. I plan to use the Fox News Rollout dataset. My sample consists of data on around 10,000 towns across America. My unit of analysis is a single town. My explanatory variable is income1990, which is the median income in 1990 for each town surveyed. Another possible explanatory variable that may come in useful is logincome1990, which is the median income in 1990 for each town surveyed but on the logarithmic scale. I have two choices for my outcome variable of interest. One is gopvoteshare1992, which is the two-party vote share for the Republicans in the 1992 presidential election. The other variable is gopvoteshare2000, which is the two-party vote share for the Republicans in the 2000 presidential election. The 1992 election is closer to when the data on median income was taken, but the 2000 election is closer to current times. If I observe that towns with higher median incomes also have higher vote shares for Republicans (direct relationship), then my hypothesis will be proven. However, if I observe that towns with higher median incomes have lower vote shares for Republicans (inverse relationship), then my hypothesis will be disproved.</p>
 <p>Milestone 1:
 I am interested in exploring data related to the sleep of Harvard freshmen. Many first-year students have not mastered their study patterns, so I am interested in how much sleep they get, when they go to bed, when they wake up, what their intended concentration is, what their gender is, how many clubs they are part of, what dorm they are in, and other identifying information. I would plan to collect this data msyelf through some means (personal surveys or possibly through social media). If this does not work, I am also interested in where Harvard freshmen study and how that possibly relates to their intended concentration, dorm, gender, etc..</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>

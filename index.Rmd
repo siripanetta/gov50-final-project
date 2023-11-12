@@ -18,10 +18,10 @@ foxnews <- read_csv("/Users/siripanetta/gov50-problem-set0/gov50-final-project/f
 foxnews
 
 samp_dist <- foxnews |> mutate(party = case_when(gopvoteshare1992 >= 0.75 ~ "Republican", gopvoteshare1992 <= 0.25 ~ "Democratic", TRUE ~ "Middle")) |> group_by(party) |> summarize(avg_in = mean(income1990, na.rm = TRUE)) |> pivot_wider(names_from = party, values_from = avg_in) |> mutate(difference = `Republican` - `Democratic`) |> select("Republican", "Democratic", difference)
-samp_dist |> knitr::kable(col.names = c("Avg. Town Income (R)", "Avg. Town Income (D)", "Difference"))
+samp_dist |> knitr::kable(col.names = c("Town Income (R)", "Town Income (D)", "Difference"))
 
 ```
-
+The table above displays the average median income in 1990 for Republican towns and Democratic towns. I categorized a town as "Republican" if the GOP vote share of the town in 1992 was equal to or greater than 0.75. I categorized a town as "Democratic" if the GOP vote share of the town in 1992 was equal to or less than 0.25. As shown, the average median income among Republican towns was around 27,000 dollars. In comparison, the average median income among Democratic towns was almost 20,000 dollars. The median income for Republican towns was around 7,000 dollars higher than for Democratic towns. This could indicate that conservative towns contain slightly wealthier people than Democratic towns. 
 
 Milestone 3:
 

@@ -6,10 +6,48 @@ output:
   distill::distill_article:
     self_contained: false
 ---
+```{r}
+##USE THIS ONE!!
+
+library(tidyverse)
+library(gov50data)
+library(infer)
+
+foxnews <- read_csv("/Users/siripanetta/gov50-problem-set0/gov50-final-project/foxnews.csv")
+foxnews
+
+samp_dist <- foxnews |> mutate(party = case_when(gopvoteshare1992 >= 0.75 ~ "Republican", gopvoteshare1992 <= 0.25 ~ "Democratic", TRUE ~ "Middle")) |> group_by(party) |> summarize(avg_in = mean(income1990, na.rm = TRUE)) |> pivot_wider(names_from = party, values_from = avg_in) |> mutate(difference = `Republican` - `Democratic`) 
+samp_dist |> knitr::kable()
+
+```
+
+
+Milestone 4:
+
+```{r}
+library(tidyverse)
+library(gov50data)
+library(infer)
+
+foxnews <- read_csv("/Users/siripanetta/gov50-problem-set0/gov50-final-project/foxnews.csv")
+foxnews
+
+samp_dist <- foxnews |> mutate(party = case_when(gopvoteshare1992 >= 0.75 ~ "Republican", gopvoteshare1992 <= 0.25 ~ "Democratic", TRUE ~ "Middle")) |> rep_slice_sample(n = 50, reps = 1000) |> group_by(replicate, party) |> summarize(avg_in = mean(income1990, na.rm = TRUE)) |> pivot_wider(names_from = party, values_from = avg_in) |> mutate(difference = `Republican` - `Democratic`) 
+samp_dist
+
+ci_95 <- na.omit(samp_dist) |> select(replicate, difference) |> get_confidence_interval(level = 0.95, type = "percentile")
+ci_95
+
+plot_dist <- samp_dist |> ggplot(aes(x = difference)) + geom_histogram(aes(y = after_stat(density))) + geom_vline(xintercept = -2.307357) + geom_vline(xintercept = 2.653983)
+plot_dist
+
+
+```
+
 
 Milestone 3:
 
-```{r}
+```{r, echo = FALSE}
 library(tidyverse)
 library(gov50data)
 
@@ -19,7 +57,6 @@ foxnews
 incomevoteplot <- ggplot(foxnews, aes(x = income1990, y = gopvoteshare1992)) + geom_point(color = "steelblue1", alpha = 0.5) + labs(x = "Median Income in 1990", y = "Republican Vote Share", title = "Income vs. GOP Support in American Towns") + geom_smooth(method = "lm", se = FALSE, color = "indianred1", size = 1.5)
 incomevoteplot
 
-##eventually add echo = FALSE to code chunk
 ```
 
 

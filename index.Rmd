@@ -6,16 +6,56 @@ output:
   distill::distill_article:
     self_contained: false
 ---
-Milestone 4:
+**Introduction:**
 
-```{r}
+I set out to investigate the relationship between wealth and political views. Specifically, how does median income affect a town’s political views? I hypothesize that the more wealthy areas will be more conservative. People with more money are more likely to support tax cuts for the wealthy and less social programs, which are in-line with Republican party views. People with less money are more likely to want more funding allocated to social programs and more taxes on the wealthy, which is more in-line with Democratic party views. 
+I believe that investigating the relationship between wealth and political attitudes is important because those with more wealth have greater influence. American campaigns have become more and more money-centered, with political action committees and interest groups exhibiting greater influence. If wealthier Americans tend to lean towards a particular political party, that political party will have more financial resources and, in general, more political power.    
+
+**Data:**
+
+I plan to use the Fox News Rollout dataset from the 2007 study "The Fox News Effect: Media Bias and Voting" by Stefano DellaVigna and Ethan Kaplan. This dataset consists of data on around 10,000 towns across America. It includes the town name, state, Republican vote shares across several years, median income, and other variables. My unit of analysis is a single town. My independent variable is income1990, which is the median income in 1990 for each town surveyed. Another possible independent variable that may come in useful is logincome1990, which is the median income in 1990 for each town surveyed but on the logarithmic scale. My independent variable (income1990) was measured using the 1990 census, through a survey method. I have two choices for my outcome variable of interest. One is gopvoteshare1992, which is the two-party vote share for the Republicans in the 1992 presidential election. The other variable is gopvoteshare2000, which is the two-party vote share for the Republicans in the 2000 presidential election. The 1992 election is closer to when the data on median income was taken, so I will be using gopvoteshare1992 as my dependent variable. My dependent variable (gopvoteshare1992) was measured using election data on voters from 1992, through a survey method. My research design is cross-sectional, as I am comparing outcomes from towns (median income and vote share) at a certain point in time. 
+
+```{r, echo = FALSE}
+library(tidyverse)
+library(gov50data)
+library(infer)
+library(skimr)
+
+foxnews <- read_csv("/Users/siripanetta/gov50-problem-set0/gov50-final-project/foxnews.csv")
+
+singvar <- ggplot(data = foxnews, mapping = aes(x = gopvoteshare1992)) + geom_histogram(color = "white", fill = "red") + labs(x = "GOP Vote Share in 1992", y = "Count", title = "Visualization of Dependent Variable")
+singvar
+
+sumstats <- foxnews |> summarize(minvote = min(gopvoteshare1992, na.rm = TRUE), medvote = median(gopvoteshare1992, na.rm = TRUE), maxvote = max(gopvoteshare1992, na.rm = TRUE), meanvote = mean(gopvoteshare1992, na.rm = TRUE), sdvote = sd(gopvoteshare1992, na.rm = TRUE))
+sumstats |> knitr::kable(col.names = c("Minimum", "Median", "Maximum", "Mean", "Standard Deviation"), digits = 3)
+```
+**Results:**
+
+```{r, echo = FALSE}
+library(tidyverse)
+library(gov50data)
+library(infer)
+library(broom)
+library(moderndive)
+
+foxnews <- read_csv("/Users/siripanetta/gov50-problem-set0/gov50-final-project/foxnews.csv")
+
+incomevoteplot <- ggplot(foxnews, aes(x = income1990, y = gopvoteshare1992)) + geom_point(color = "steelblue1", alpha = 0.5) + labs(x = "Median Income in 1990", y = "Republican Vote Share", title = "Income vs. GOP Support in American Towns") + geom_smooth(method = "lm", se = FALSE, color = "indianred1", size = 1.5)
+incomevoteplot
+
+regtable <- lm(gopvoteshare1992 ~ income1990, data = foxnews)
+get_regression_table(regtable) |> knitr::kable(digits = 3, col.names = c("Term", "Estimate", "Standard Error", "Statistic", "P-Value", "Lower CI", "Upper CI"))
+
+```
+Based on our scatterplot and regression table, for each additional unit of income1990, the gopvoteshare1992 variable increases by 0.01, while holding other variables constant. In plain English, for each additional $10,000 of town median income, the GOP vote share increases by 1.4%. The p-value of this estimated coefficient, as shown in the regression table, is 0 (or a number extremely close to 0). This indicates statistical significance, as the p-value is lower than the common alpha values of 0.01, 0.05, or 0.1. Personally, I believe that there are so many factors that go into shaping one's political views and party affiliation, that I am doubtful of a direct causal effect between these two variables. I do not think that all possible confounding variables were accounted for in this analysis. However, I do believe that these two variables are correlated, as shown by the plot above. As income for a town increases, so does GOP vote share. 
+
+```{r, echo = FALSE}
 
 library(tidyverse)
 library(gov50data)
 library(infer)
 
 foxnews <- read_csv("/Users/siripanetta/gov50-problem-set0/gov50-final-project/foxnews.csv")
-foxnews
 
 samp_dist <- foxnews |> mutate(party = case_when(gopvoteshare1992 >= 0.75 ~ "Republican", gopvoteshare1992 <= 0.25 ~ "Democratic", TRUE ~ "Middle")) |> group_by(party) |> summarize(avg_in = mean(income1990, na.rm = TRUE)) |> pivot_wider(names_from = party, values_from = avg_in) |> mutate(difference = `Republican` - `Democratic`) |> select("Republican", "Democratic", difference)
 samp_dist |> knitr::kable(col.names = c("Republican Town Incomes", "Democratic Town Incomes", "Difference"))
@@ -23,24 +63,6 @@ samp_dist |> knitr::kable(col.names = c("Republican Town Incomes", "Democratic T
 ```
 The table above displays the average median income in 1990 for Republican towns and Democratic towns. I categorized a town as "Republican" if the GOP vote share of the town in 1992 was equal to or greater than 0.75. I categorized a town as "Democratic" if the GOP vote share of the town in 1992 was equal to or less than 0.25. As shown, the average median income among Republican towns was around 27,000 dollars. In comparison, the average median income among Democratic towns was almost 20,000 dollars. The median income for Republican towns was around 7,000 dollars higher than for Democratic towns. This could indicate that conservative towns contain slightly wealthier people than Democratic towns. 
 
-Milestone 3:
+**Conclusion:**
 
-```{r, echo = FALSE}
-library(tidyverse)
-library(gov50data)
-
-foxnews <- read_csv("/Users/siripanetta/gov50-problem-set0/gov50-final-project/foxnews.csv")
-foxnews
-
-incomevoteplot <- ggplot(foxnews, aes(x = income1990, y = gopvoteshare1992)) + geom_point(color = "steelblue1", alpha = 0.5) + labs(x = "Median Income in 1990", y = "Republican Vote Share", title = "Income vs. GOP Support in American Towns") + geom_smooth(method = "lm", se = FALSE, color = "indianred1", size = 1.5)
-incomevoteplot
-
-```
-
-
-Milestone 2: 
-How does median income affect a town’s political views? I hypothesize that the more wealthy areas will be more conservative. People with more money are more likely to support tax cuts for the wealthy and less social programs, which are in-line with Republican party views. People with less money are more likely to want more funding allocated to social programs and more taxes on the wealthy, which is more in-line with Democratic party views. I plan to use the Fox News Rollout dataset. My sample consists of data on around 10,000 towns across America. My unit of analysis is a single town. My explanatory variable is income1990, which is the median income in 1990 for each town surveyed. Another possible explanatory variable that may come in useful is logincome1990, which is the median income in 1990 for each town surveyed but on the logarithmic scale. I have two choices for my outcome variable of interest. One is gopvoteshare1992, which is the two-party vote share for the Republicans in the 1992 presidential election. The other variable is gopvoteshare2000, which is the two-party vote share for the Republicans in the 2000 presidential election. The 1992 election is closer to when the data on median income was taken, but the 2000 election is closer to current times. If I observe that towns with higher median incomes also have higher vote shares for Republicans (direct relationship), then my hypothesis will be proven. However, if I observe that towns with higher median incomes have lower vote shares for Republicans (inverse relationship), then my hypothesis will be disproved. 
-
-Milestone 1:
-I am interested in exploring data related to the sleep of Harvard freshmen. Many first-year students have not mastered their study patterns, so I am interested in how much sleep they get, when they go to bed, when they wake up, what their intended concentration is, what their gender is, how many clubs they are part of, what dorm they are in, and other identifying information. I would plan to collect this data msyelf through some means (personal surveys or possibly through social media). If this does not work, I am also interested in where Harvard freshmen study and how that possibly relates to their intended concentration, dorm, gender, etc..
-
+The above scatterplot showed a positive correlation between median income and GOP vote share. The regression table showed that for each additional unit of income, GOP vote share increased by an average of 1.4%. And the second table reveals that the median income for "Republican" towns was around $7,000 higher than for "Democratic" towns. Overall, my analysis supported my hypothesis. As the median income of a town increased, the GOP vote share also increased. And, on average, right-leaning towns had slightly higher average median incomes when compared to left-leaning towns. There are several limitations to my analysis, though. To start, my data on income is from 1990, and my data on GOP vote share is from 1992. In the past thirty years, political attitudes and locations of residence could have changed, and the results of this analysis with current data could look completely different. These results should only be applied under the context of the early 1990s. Also, my dependent variable data is only from the year 1992. The candidates or measures on the ballot vary each election year, and a certain party could have gotten more votes in the year 1992 for varying reasons (a certain candidate, national economic conditions, certain ballot issues, etc..). If I had more time and money, I would conduct this study with more recent data and over several different election years. I would also test for confounding variables, like the town's average rate of college attendance or racial composition. 
